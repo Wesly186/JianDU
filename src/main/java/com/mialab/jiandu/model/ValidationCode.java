@@ -3,53 +3,67 @@ package com.mialab.jiandu.model;
 import java.util.Date;
 
 public class ValidationCode {
-    private String phone;
+	private String phone;
 
-    private Integer validationCode;
+	private Integer validationCode;
 
-    private Date expires;
+	private Date expires;
 
-    private Date nextTime;
+	private Date nextTime;
 
-    private Date generateTime;
+	private Date generateTime;
 
-    public String getPhone() {
-        return phone;
-    }
+	public ValidationCode() {
+		super();
+	}
 
-    public void setPhone(String phone) {
-        this.phone = phone == null ? null : phone.trim();
-    }
+	public ValidationCode(String phone, Integer validationCode, Date expires,
+			Date nextTime, Date generateTime) {
+		super();
+		this.phone = phone;
+		this.validationCode = validationCode;
+		this.expires = expires;
+		this.nextTime = nextTime;
+		this.generateTime = generateTime;
+	}
 
-    public Integer getValidationCode() {
-        return validationCode;
-    }
+	public String getPhone() {
+		return phone;
+	}
 
-    public void setValidationCode(Integer validationCode) {
-        this.validationCode = validationCode;
-    }
+	public void setPhone(String phone) {
+		this.phone = phone == null ? null : phone.trim();
+	}
 
-    public Date getExpires() {
-        return expires;
-    }
+	public Integer getValidationCode() {
+		return validationCode;
+	}
 
-    public void setExpires(Date expires) {
-        this.expires = expires;
-    }
+	public void setValidationCode(Integer validationCode) {
+		this.validationCode = validationCode;
+	}
 
-    public Date getNextTime() {
-        return nextTime;
-    }
+	public Date getExpires() {
+		return expires;
+	}
 
-    public void setNextTime(Date nextTime) {
-        this.nextTime = nextTime;
-    }
+	public void setExpires(Date expires) {
+		this.expires = expires;
+	}
 
-    public Date getGenerateTime() {
-        return generateTime;
-    }
+	public Date getNextTime() {
+		return nextTime;
+	}
 
-    public void setGenerateTime(Date generateTime) {
-        this.generateTime = generateTime;
-    }
+	public void setNextTime(Date nextTime) {
+		this.nextTime = nextTime;
+	}
+
+	public Date getGenerateTime() {
+		return generateTime;
+	}
+
+	public void setGenerateTime(Date generateTime) {
+		this.generateTime = generateTime;
+	}
 }
