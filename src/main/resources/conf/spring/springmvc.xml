@@ -68,8 +68,13 @@
 	</bean>
 
 	<!--拦截器 -->
-	<!--多个拦截器,顺序执行 -->
-	
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean class="com.mialab.jiandu.web.interceptor.AuthenticateInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+
 	<!--视图解析器：支持JSP视图解析 -->
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
