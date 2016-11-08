@@ -17,6 +17,8 @@ public class ExceptionResolver implements HandlerExceptionResolver {
 	public ModelAndView resolveException(HttpServletRequest request,
 			HttpServletResponse response, Object handler, Exception ex) {
 
+		ex.printStackTrace();
+
 		CustomException customException = null;
 		if (ex instanceof CustomException) {
 			customException = (CustomException) ex;
@@ -24,8 +26,8 @@ public class ExceptionResolver implements HandlerExceptionResolver {
 			customException = new CustomException(1000, "未知错误");
 		}
 		// 封装错误信息
-		ResponseData<String> responseData = new ResponseData<String>(
-				customException.getCode(), customException.getMessage(), null);
+		ResponseData responseData = new ResponseData(customException.getCode(),
+				customException.getMessage(), null);
 		Gson gson = new Gson();
 		String jsonString = gson.toJson(responseData);
 		response.setContentType("application/json;charset=utf-8");

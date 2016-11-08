@@ -2,18 +2,22 @@ package com.mialab.jiandu.model;
 
 /**
  * http响应范型类
+ * 
  * @author Wesly186
  *
  * @param <T>
  */
-public class ResponseData<T> {
+public class ResponseData {
 
 	private int code;
 	private String message;
-	private T data;
+	private Object data;
 
-	public ResponseData(int code, String message, T data) {
-		super();
+	public ResponseData() {
+
+	}
+
+	public ResponseData(int code, String message, Object data) {
 		this.code = code;
 		this.message = message;
 		this.data = data;
@@ -35,11 +39,11 @@ public class ResponseData<T> {
 		this.message = message;
 	}
 
-	public T getData() {
+	public Object getData() {
 		return data;
 	}
 
-	public void setData(T data) {
+	public void setData(Object data) {
 		this.data = data;
 	}
 }

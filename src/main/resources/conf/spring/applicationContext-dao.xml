@@ -37,4 +37,10 @@
 		<property name="mapperLocations" value="classpath:com/mialab/jiandu/mapping/*.xml" />
 	</bean>
 
+	<!-- basePackage：扫描包路径，中间可以用逗号或分号分隔定义多个包 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.mialab.jiandu.mapper" />
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+	</bean>
+
 </beans>
