@@ -1,11 +1,9 @@
 package com.mialab.jiandu.mapper;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.mialab.jiandu.model.User;
 import com.mialab.jiandu.model.UserExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface UserMapper {
     int countByExample(UserExample example);

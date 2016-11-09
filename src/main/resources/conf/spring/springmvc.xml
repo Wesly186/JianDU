@@ -18,7 +18,8 @@
 
 	<!-- 使用 mvc:annotation-driven代替注解映射器和注解适配器配置 -->
 	<mvc:annotation-driven conversion-service="conversionService"
-		validator="validator"></mvc:annotation-driven>
+		validator="validator">
+	</mvc:annotation-driven>
 
 	<!-- 参数转换器 -->
 	<bean id="conversionService"
@@ -26,7 +27,7 @@
 		<!-- 转换器 -->
 		<property name="converters">
 			<list>
-				<!-- <bean class="com.mialab.jiandu.web.converter.DataConverter" /> -->
+				<bean class="com.mialab.jiandu.web.converter.DateConverter" />
 			</list>
 		</property>
 	</bean>

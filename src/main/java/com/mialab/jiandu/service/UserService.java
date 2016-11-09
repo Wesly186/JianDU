@@ -4,7 +4,7 @@ import com.mialab.jiandu.model.User;
 
 public interface UserService {
 
-	void register(User user) throws Exception;
+	User register(User user, String validationCode) throws Exception;
 
-	void getValidateCode(String phone, String business) throws Exception;
+	void getValidationCode(String phone, String business) throws Exception;
 }

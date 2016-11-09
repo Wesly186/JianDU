@@ -11,7 +11,7 @@
 			jdbcType="TIMESTAMP" />
 	</resultMap>
 
-	<select id="selectValidationCodeByPhone" parameterType="String"
+	<select id="selectValidationCodeByPhone" parameterType="string"
 		resultMap="BaseResultMap">
 		SELECT * FROM validation_code WHERE phone = #{phone} ORDER
 		BY generate_time DESC limit 0,1;

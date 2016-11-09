@@ -2,6 +2,8 @@ package com.mialab.jiandu.serviceImpl;
 
 import java.util.Date;
 
+import org.apache.oltu.oauth2.as.issuer.MD5Generator;
+import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,12 +32,36 @@ public class UserServiceImpl implements UserService {
 	private ValidationCodeMapper validationCodeMapper;
 
 	@Override
-	public void register(User user) {
-
+	public User register(User user, String validationCode)
+			throws CustomException, OAuthSystemException {
+		ValidationCodeCustom validationCodeCustom = validationCodeCustomMapper
+				.selectValidationCodeByPhone(user.getPhone());
+		// 非法验证码
+		if (validationCodeCustom == null) {
+			throw new CustomException(408, "非法验证码");
+		}
+		// 验证码过期
+		if (validationCodeCustom.getExpires().getTime() < new Date().getTime()) {
+			throw new CustomException(407, "验证码过期");
+		}
+		// 该用户已经注册
+		if (userMapper.selectByPrimaryKey(user.getPhone()) != null) {
+			throw new CustomException(409, "该手机号已经注册");
+		}
+		// 密码加密
+		MD5Generator generator = new MD5Generator();
+		String generatePassword = generator.generateValue(user.getPassword());
+		user.setPassword(generatePassword);
+		user.setUsername("简读" + user.getPhone().substring(7));
+		user.setRegisterTime(new Date());
+		userMapper.insert(user);
+		// 回显数据不应包含密码
+		user.setPassword(null);
+		return user;
 	}
 
 	@Override
-	public void getValidateCode(String phone, String business)
+	public void getValidationCode(String phone, String business)
 			throws CustomException {
 		if (business.equals(GlobalConf.BUSINESS_REGISTER)) {
 			User appUser = userMapper.selectByPrimaryKey(phone);
@@ -58,16 +84,15 @@ public class UserServiceImpl implements UserService {
 		TaobaoClient client = new DefaultTaobaoClient(GlobalConf.DAYU_URL,
 				GlobalConf.DAYU_KEY, GlobalConf.DAYU_SECRET);
 		AlibabaAliqinFcSmsNumSendRequest req = new AlibabaAliqinFcSmsNumSendRequest();
+		req.setSmsFreeSignName("简读社区");
 		req.setSmsType("normal");
 		req.setRecNum(phone);
 		if (business.equals(GlobalConf.BUSINESS_REGISTER)) {
-			req.setSmsFreeSignName("注册验证");
-			req.setSmsTemplateCode("SMS_12195568");
+			req.setSmsTemplateCode("SMS_25685251");
 			req.setSmsParamString("{\"code\":\"" + code
 					+ "\",\"product\":\"简读App\"}");
 		} else {
-			req.setSmsFreeSignName("变更验证");
-			req.setSmsTemplateCode("SMS_12195566");
+			req.setSmsTemplateCode("SMS_25615153");
 			req.setSmsParamString("{\"code\":\"" + code
 					+ "\",\"product\":\"简读App\"}");
 		}

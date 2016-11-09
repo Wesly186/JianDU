@@ -2,54 +2,55 @@ package com.mialab.jiandu.model;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.Length;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.mialab.jiandu.web.validation.RegisterGroup;
+
 public class User {
-    private String phone;
+	@NotNull(groups = RegisterGroup.class)
+	@Length(min = 11, max = 11, message = "{message}", groups = RegisterGroup.class)
+	private String phone;
 
-    private String username;
+	private String username;
+	@NotNull
+	@Pattern(regexp = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$", message = "{message}", groups = RegisterGroup.class)
+	private String password;
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")  
+	private Date registerTime;
 
-    private String password;
+	public String getPhone() {
+		return phone;
+	}
 
-    private String salt;
+	public void setPhone(String phone) {
+		this.phone = phone == null ? null : phone.trim();
+	}
 
-    private Date registerTime;
+	public String getUsername() {
+		return username;
+	}
 
-    public String getPhone() {
-        return phone;
-    }
+	public void setUsername(String username) {
+		this.username = username == null ? null : username.trim();
+	}
 
-    public void setPhone(String phone) {
-        this.phone = phone == null ? null : phone.trim();
-    }
+	public String getPassword() {
+		return password;
+	}
 
-    public String getUsername() {
-        return username;
-    }
+	public void setPassword(String password) {
+		this.password = password == null ? null : password.trim();
+	}
 
-    public void setUsername(String username) {
-        this.username = username == null ? null : username.trim();
-    }
+	public Date getRegisterTime() {
+		return registerTime;
+	}
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password == null ? null : password.trim();
-    }
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt == null ? null : salt.trim();
-    }
-
-    public Date getRegisterTime() {
-        return registerTime;
-    }
-
-    public void setRegisterTime(Date registerTime) {
-        this.registerTime = registerTime;
-    }
+	public void setRegisterTime(Date registerTime) {
+		this.registerTime = registerTime;
+	}
 }

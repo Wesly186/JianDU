@@ -5,7 +5,6 @@
     <id column="phone" property="phone" jdbcType="CHAR" />
     <result column="username" property="username" jdbcType="VARCHAR" />
     <result column="password" property="password" jdbcType="VARCHAR" />
-    <result column="salt" property="salt" jdbcType="VARCHAR" />
     <result column="register_time" property="registerTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
@@ -67,7 +66,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    phone, username, password, salt, register_time
+    phone, username, password, register_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mialab.jiandu.model.UserExample" >
     select
@@ -101,9 +100,9 @@
   </delete>
   <insert id="insert" parameterType="com.mialab.jiandu.model.User" >
     insert into user (phone, username, password, 
-      salt, register_time)
+      register_time)
     values (#{phone,jdbcType=CHAR}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{salt,jdbcType=VARCHAR}, #{registerTime,jdbcType=TIMESTAMP})
+      #{registerTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.mialab.jiandu.model.User" >
     insert into user
@@ -116,9 +115,6 @@
       </if>
       <if test="password != null" >
         password,
-      </if>
-      <if test="salt != null" >
-        salt,
       </if>
       <if test="registerTime != null" >
         register_time,
@@ -133,9 +129,6 @@
       </if>
       <if test="password != null" >
         #{password,jdbcType=VARCHAR},
-      </if>
-      <if test="salt != null" >
-        #{salt,jdbcType=VARCHAR},
       </if>
       <if test="registerTime != null" >
         #{registerTime,jdbcType=TIMESTAMP},
@@ -160,9 +153,6 @@
       <if test="record.password != null" >
         password = #{record.password,jdbcType=VARCHAR},
       </if>
-      <if test="record.salt != null" >
-        salt = #{record.salt,jdbcType=VARCHAR},
-      </if>
       <if test="record.registerTime != null" >
         register_time = #{record.registerTime,jdbcType=TIMESTAMP},
       </if>
@@ -176,7 +166,6 @@
     set phone = #{record.phone,jdbcType=CHAR},
       username = #{record.username,jdbcType=VARCHAR},
       password = #{record.password,jdbcType=VARCHAR},
-      salt = #{record.salt,jdbcType=VARCHAR},
       register_time = #{record.registerTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -191,9 +180,6 @@
       <if test="password != null" >
         password = #{password,jdbcType=VARCHAR},
       </if>
-      <if test="salt != null" >
-        salt = #{salt,jdbcType=VARCHAR},
-      </if>
       <if test="registerTime != null" >
         register_time = #{registerTime,jdbcType=TIMESTAMP},
       </if>
@@ -204,7 +190,6 @@
     update user
     set username = #{username,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
-      salt = #{salt,jdbcType=VARCHAR},
       register_time = #{registerTime,jdbcType=TIMESTAMP}
     where phone = #{phone,jdbcType=CHAR}
   </update>
