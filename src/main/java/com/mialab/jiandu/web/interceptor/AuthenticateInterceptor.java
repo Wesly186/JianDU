@@ -11,7 +11,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.mialab.jiandu.exception.CustomException;
-import com.mialab.jiandu.model.OauthTokenCustom;
+import com.mialab.jiandu.model.OauthToken;
 import com.mialab.jiandu.service.OauthTokenService;
 import com.mialab.jiandu.utils.ResourcesUtil;
 
@@ -43,11 +43,11 @@ public class AuthenticateInterceptor implements HandlerInterceptor {
 			throw new CustomException(401, "禁止匿名访问");
 		}
 		// accessToken过期的拦截
-		OauthTokenCustom oauthTokenCustom = oauthTokenService
+		OauthToken oauthToken = oauthTokenService
 				.getOauthTokenByAccessToken(accessToken);
-		if (oauthTokenCustom == null) {
+		if (oauthToken == null) {
 			throw new CustomException(402, "无效的AccessToken");
-		} else if (oauthTokenCustom.getAccessTokenExpires().getTime() < new Date()
+		} else if (oauthToken.getAccessTokenExpires().getTime() < new Date()
 				.getTime()) {
 			throw new CustomException(402, "无效的AccessToken");
 		} else {

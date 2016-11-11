@@ -2,7 +2,9 @@ package com.mialab.jiandu.mapper;
 
 import com.mialab.jiandu.model.OauthToken;
 import com.mialab.jiandu.model.OauthTokenExample;
+
 import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface OauthTokenMapper {
@@ -27,4 +29,8 @@ public interface OauthTokenMapper {
     int updateByPrimaryKeySelective(OauthToken record);
 
     int updateByPrimaryKey(OauthToken record);
+    
+    OauthToken getOauthTokenByAccessToken(String accessToken);
+
+	OauthToken selectByRefreshToken(String refreshToken);
 }

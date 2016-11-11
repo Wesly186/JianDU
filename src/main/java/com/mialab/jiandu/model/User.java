@@ -7,7 +7,6 @@ import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mialab.jiandu.web.validation.RegisterGroup;
 
 public class User {
@@ -19,7 +18,7 @@ public class User {
 	@NotNull
 	@Pattern(regexp = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$", message = "{message}", groups = RegisterGroup.class)
 	private String password;
-	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")  
+	
 	private Date registerTime;
 
 	public String getPhone() {
