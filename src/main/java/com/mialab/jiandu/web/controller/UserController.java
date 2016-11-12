@@ -7,6 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.mialab.jiandu.exception.CustomException;
 import com.mialab.jiandu.model.ResponseData;
@@ -29,8 +30,8 @@ public class UserController {
 			throw new CustomException(400, "参数不合法");
 		}
 		// 注册操作
-		ResponseData responseData = new ResponseData(200, "注册成功",
-				userService.register(user, validationCode));
+		userService.register(user, validationCode);
+		ResponseData responseData = new ResponseData(200, "注册成功", null);
 		return responseData;
 	}
 
@@ -43,6 +44,24 @@ public class UserController {
 		}
 		userService.getValidationCode(phone, business);
 		ResponseData responseData = new ResponseData(200, "验证码发送成功", null);
+		return responseData;
+	}
+
+	@RequestMapping("/updateProfile")
+	@ResponseBody
+	public ResponseData updateProfile(String accessToken,
+			MultipartFile headPic, String username, String blogAddress,
+			String introduction, String sex, String job) throws Exception {
+		User user = new User();
+		user.setUsername(username);
+		user.setBlogAddress(blogAddress);
+		user.setIntroduction(introduction);
+		user.setSex(sex);
+		user.setJob(job);
+
+		user = userService.updateProfile(accessToken, headPic, user);
+		ResponseData responseData = new ResponseData(200, "修改成功", user);
+
 		return responseData;
 	}
 }

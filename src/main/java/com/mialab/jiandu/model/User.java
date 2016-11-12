@@ -19,6 +19,16 @@ public class User {
 	@Pattern(regexp = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$", message = "{message}", groups = RegisterGroup.class)
 	private String password;
 	
+	private String headPic;
+
+	private String blogAddress;
+
+	private String introduction;
+
+	private String sex;
+	
+	private String job;
+
 	private Date registerTime;
 
 	public String getPhone() {
@@ -26,7 +36,7 @@ public class User {
 	}
 
 	public void setPhone(String phone) {
-		this.phone = phone == null ? null : phone.trim();
+		this.phone = phone;
 	}
 
 	public String getUsername() {
@@ -34,7 +44,7 @@ public class User {
 	}
 
 	public void setUsername(String username) {
-		this.username = username == null ? null : username.trim();
+		this.username = username;
 	}
 
 	public String getPassword() {
@@ -42,7 +52,31 @@ public class User {
 	}
 
 	public void setPassword(String password) {
-		this.password = password == null ? null : password.trim();
+		this.password = password;
+	}
+
+	public String getBlogAddress() {
+		return blogAddress;
+	}
+
+	public void setBlogAddress(String blogAddress) {
+		this.blogAddress = blogAddress;
+	}
+
+	public String getIntroduction() {
+		return introduction;
+	}
+
+	public void setIntroduction(String introduction) {
+		this.introduction = introduction;
+	}
+
+	public String getSex() {
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
 	}
 
 	public Date getRegisterTime() {
@@ -51,5 +85,21 @@ public class User {
 
 	public void setRegisterTime(Date registerTime) {
 		this.registerTime = registerTime;
+	}
+
+	public String getHeadPic() {
+		return headPic;
+	}
+
+	public void setHeadPic(String headPic) {
+		this.headPic = headPic;
+	}
+
+	public String getJob() {
+		return job;
+	}
+
+	public void setJob(String job) {
+		this.job = job;
 	}
 }

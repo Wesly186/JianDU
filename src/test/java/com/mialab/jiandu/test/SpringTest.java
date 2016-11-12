@@ -1,7 +1,5 @@
 package com.mialab.jiandu.test;
 
-import java.util.Date;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +19,7 @@ public class SpringTest {
 	private UserService userService;
 
 	@Test
-	public void demo1() throws Exception {
-		//System.out.println("18625210821".substring(7));
-		System.out.println(new Date().getTime());
+	public void test() throws Exception {
+		
 	}
 }

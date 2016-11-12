@@ -1,16 +1,23 @@
 package com.mialab.jiandu.serviceImpl;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 import org.apache.oltu.oauth2.as.issuer.MD5Generator;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.mialab.jiandu.exception.CustomException;
+import com.mialab.jiandu.mapper.OauthTokenMapper;
 import com.mialab.jiandu.mapper.UserMapper;
 import com.mialab.jiandu.mapper.ValidationCodeCustomMapper;
 import com.mialab.jiandu.mapper.ValidationCodeMapper;
+import com.mialab.jiandu.model.OauthToken;
 import com.mialab.jiandu.model.User;
 import com.mialab.jiandu.model.ValidationCode;
 import com.mialab.jiandu.model.ValidationCodeCustom;
@@ -30,9 +37,11 @@ public class UserServiceImpl implements UserService {
 	private ValidationCodeCustomMapper validationCodeCustomMapper;
 	@Autowired
 	private ValidationCodeMapper validationCodeMapper;
+	@Autowired
+	private OauthTokenMapper oauthTokenMapper;
 
 	@Override
-	public User register(User user, String validationCode)
+	public void register(User user, String validationCode)
 			throws CustomException, OAuthSystemException {
 		ValidationCodeCustom validationCodeCustom = validationCodeCustomMapper
 				.selectValidationCodeByPhone(user.getPhone());
@@ -53,11 +62,9 @@ public class UserServiceImpl implements UserService {
 		String generatePassword = generator.generateValue(user.getPassword());
 		user.setPassword(generatePassword);
 		user.setUsername("简读" + user.getPhone().substring(7));
+		user.setSex("男");
 		user.setRegisterTime(new Date());
-		userMapper.insert(user);
-		// 回显数据不应包含密码
-		user.setPassword(null);
-		return user;
+		userMapper.insertSelective(user);
 	}
 
 	@Override
@@ -101,5 +108,41 @@ public class UserServiceImpl implements UserService {
 		} catch (ApiException e) {
 			throw new CustomException(404, "短信服务器出错");
 		}
+	}
+
+	@Override
+	public User updateProfile(String accessToken, MultipartFile headPic,
+			User user) throws IllegalStateException, IOException {
+		String newFileName = null;
+		if (headPic != null) {
+			// 原始文件名称
+			String pictureFile_name = headPic.getOriginalFilename();
+			// 新文件名称
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			String dateString = format.format(new Date());
+			newFileName = dateString
+					+ "/"
+					+ UUID.randomUUID().toString()
+					+ pictureFile_name.substring(pictureFile_name
+							.lastIndexOf("."));
+			// 上传图片
+			File uploadPic = new File("D:/Temp/headPic/" + newFileName);
+			if (!uploadPic.exists()) {
+				uploadPic.mkdirs();
+			}
+			// 向磁盘写文件
+			headPic.transferTo(uploadPic);
+		}
+
+		OauthToken oauthToken = oauthTokenMapper
+				.getOauthTokenByAccessToken(accessToken);
+		user.setPhone(oauthToken.getPhone());
+		if (newFileName != null) {
+			user.setHeadPic(newFileName);
+		}
+		userMapper.updateByPrimaryKeySelective(user);
+		user = userMapper.selectByPrimaryKey(user.getPhone());
+
+		return user;
 	}
 }

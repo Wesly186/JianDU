@@ -60,8 +60,7 @@ public class OauthTokenImpl implements OauthTokenService {
 							.getRefreshToken());
 					oauthTokenNew.setRefreshTokenExpires(oauthTokenExist
 							.getRefreshTokenExpires());
-					oauthTokenMapper
-							.updateByPrimaryKey(oauthTokenNew);
+					oauthTokenMapper.updateByPrimaryKey(oauthTokenNew);
 				} else {
 					oauthTokenNew = oauthTokenMapper.selectByPrimaryKey(phone);
 				}
@@ -85,8 +84,9 @@ public class OauthTokenImpl implements OauthTokenService {
 						.getTime()) {
 			throw new CustomException(403, "无效的RefreshToken");
 		}
-		if(oauthToken.getAccessTokenExpires().getTime()<new Date().getTime()){
-			OAuthIssuerImpl authIssuerImpl = new OAuthIssuerImpl(new MD5Generator());
+		if (oauthToken.getAccessTokenExpires().getTime() < new Date().getTime()) {
+			OAuthIssuerImpl authIssuerImpl = new OAuthIssuerImpl(
+					new MD5Generator());
 			String accessToken = authIssuerImpl.accessToken();
 			oauthToken.setAccessToken(accessToken);
 			oauthToken.setAccessTokenExpires(new Date(
@@ -110,8 +110,8 @@ public class OauthTokenImpl implements OauthTokenService {
 		oauthToken.setPhone(phone);
 		oauthToken.setRefreshToken(refreshToken);
 		oauthToken.setRefreshTokenExpires(new Date(new Date().getTime() + 1000
-				* 60 * 60 * 24 * 30));
-		
+				* 60 * 60 * 24 * 30L));
+
 		return oauthToken;
 	}
 }
