@@ -16,7 +16,7 @@ import com.mialab.jiandu.service.OauthTokenService;
 public class OauthController {
 
 	@Autowired
-	OauthTokenService oauthTokenService;
+	private OauthTokenService oauthTokenService;
 
 	@RequestMapping("/login")
 	@ResponseBody

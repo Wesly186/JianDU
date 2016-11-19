@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mialab.jiandu.mapper.AppVersionMapper">
+	<resultMap id="BaseResultMap" type="com.mialab.jiandu.model.AppVersion">
+		<result column="version_code" property="versionCode" jdbcType="INTEGER" />
+		<result column="version_name" property="versionName" jdbcType="VARCHAR" />
+		<result column="download_url" property="downloadUrl" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="update_msg" property="updateMsg" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		version_code, version_name, download_url, update_time,
+		update_msg
+	</sql>
+
+	<insert id="insert" parameterType="com.mialab.jiandu.model.AppVersion">
+		insert into app_version
+		(version_code, version_name, download_url,
+		update_time, update_msg)
+		values (#{versionCode,jdbcType=INTEGER},
+		#{versionName,jdbcType=VARCHAR},
+		#{downloadUrl,jdbcType=VARCHAR},
+		#{updateTime,jdbcType=TIMESTAMP}, #{updateMsg,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.mialab.jiandu.model.AppVersion">
+		insert into app_version
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="versionCode != null">
+				version_code,
+			</if>
+			<if test="versionName != null">
+				version_name,
+			</if>
+			<if test="downloadUrl != null">
+				download_url,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="updateMsg != null">
+				update_msg,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="versionCode != null">
+				#{versionCode,jdbcType=INTEGER},
+			</if>
+			<if test="versionName != null">
+				#{versionName,jdbcType=VARCHAR},
+			</if>
+			<if test="downloadUrl != null">
+				#{downloadUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateMsg != null">
+				#{updateMsg,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<select id="findByVersionCode" parameterType="int" resultMap="BaseResultMap">
+		select * from app_version where version_code >#{versionCode}
+		order by version_code desc limit 1
+	</select>
+
+</mapper>

@@ -45,10 +45,10 @@ public class AuthenticateInterceptor implements HandlerInterceptor {
 		// accessToken过期的拦截
 		OauthToken oauthToken = oauthTokenService
 				.getOauthTokenByAccessToken(accessToken);
-		if (oauthToken == null) {
-			throw new CustomException(402, "无效的AccessToken");
-		} else if (oauthToken.getAccessTokenExpires().getTime() < new Date()
-				.getTime()) {
+		if (oauthToken == null
+				|| oauthToken.getAccessTokenExpires().getTime() < new Date()
+						.getTime()) {
+			response.setStatus(401);
 			throw new CustomException(402, "无效的AccessToken");
 		} else {
 			return true;

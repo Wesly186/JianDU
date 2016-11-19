@@ -82,7 +82,7 @@ public class OauthTokenImpl implements OauthTokenService {
 		if (oauthToken == null
 				|| oauthToken.getRefreshTokenExpires().getTime() < new Date()
 						.getTime()) {
-			throw new CustomException(403, "无效的RefreshToken");
+			throw new CustomException(403, "RefreshToken过期，请重新登陆！");
 		}
 		if (oauthToken.getAccessTokenExpires().getTime() < new Date().getTime()) {
 			OAuthIssuerImpl authIssuerImpl = new OAuthIssuerImpl(
