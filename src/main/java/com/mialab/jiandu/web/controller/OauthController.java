@@ -10,6 +10,7 @@ import com.mialab.jiandu.model.LoginRsp;
 import com.mialab.jiandu.model.OauthToken;
 import com.mialab.jiandu.model.ResponseData;
 import com.mialab.jiandu.service.OauthTokenService;
+import com.wordnik.swagger.annotations.ApiOperation;
 
 @Controller
 @RequestMapping("/oauth")
@@ -18,6 +19,7 @@ public class OauthController {
 	@Autowired
 	private OauthTokenService oauthTokenService;
 
+	@ApiOperation(value = "登陆", httpMethod = "POST")
 	@RequestMapping("/login")
 	@ResponseBody
 	public ResponseData login(@RequestParam String phone,
@@ -26,6 +28,7 @@ public class OauthController {
 		return new ResponseData(200, "登陆成功", loginRsp);
 	}
 
+	@ApiOperation(value = "刷新token", httpMethod = "POST")
 	@RequestMapping("/refreshAccessToken")
 	@ResponseBody
 	public ResponseData refreshAccessToken(@RequestParam String refreshToken)

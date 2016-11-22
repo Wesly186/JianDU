@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.mialab.jiandu.conf.GlobalConf;
 import com.mialab.jiandu.exception.CustomException;
 import com.mialab.jiandu.mapper.OauthTokenMapper;
 import com.mialab.jiandu.mapper.UserMapper;
@@ -22,7 +23,6 @@ import com.mialab.jiandu.model.User;
 import com.mialab.jiandu.model.ValidationCode;
 import com.mialab.jiandu.model.ValidationCodeCustom;
 import com.mialab.jiandu.service.UserService;
-import com.mialab.jiandu.utils.GlobalConf;
 import com.taobao.api.ApiException;
 import com.taobao.api.DefaultTaobaoClient;
 import com.taobao.api.TaobaoClient;

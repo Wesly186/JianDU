@@ -1,4 +1,4 @@
-package com.mialab.jiandu.utils;
+package com.mialab.jiandu.conf;
 
 public class GlobalConf {
 

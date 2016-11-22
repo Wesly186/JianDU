@@ -13,6 +13,7 @@ import com.mialab.jiandu.exception.CustomException;
 import com.mialab.jiandu.model.ResponseData;
 import com.mialab.jiandu.model.User;
 import com.mialab.jiandu.service.UserService;
+import com.wordnik.swagger.annotations.ApiOperation;
 
 @Controller
 @RequestMapping("/user")
@@ -21,6 +22,7 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
+	@ApiOperation(value = "注册", httpMethod = "POST")
 	@RequestMapping("/register")
 	@ResponseBody
 	public ResponseData register(@Validated User user, BindingResult result,
@@ -35,6 +37,7 @@ public class UserController {
 		return responseData;
 	}
 
+	@ApiOperation(value = "获取验证码", httpMethod = "POST")
 	@RequestMapping("/getValidationCode")
 	@ResponseBody
 	public ResponseData getValidationCode(@RequestParam String phone,
@@ -47,6 +50,7 @@ public class UserController {
 		return responseData;
 	}
 
+	@ApiOperation(value = "更新用户信息", httpMethod = "POST")
 	@RequestMapping("/updateProfile")
 	@ResponseBody
 	public ResponseData updateProfile(String accessToken,

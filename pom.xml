@@ -28,6 +28,7 @@
 		<jsp-api.version>2.0</jsp-api.version>
 		<gson.version>2.2.4</gson.version>
 		<oauth2.version>1.0.2</oauth2.version>
+		<swagger-springmvc.version>1.0.2</swagger-springmvc.version>
 	</properties>
 
 	<dependencies>
@@ -162,6 +163,12 @@
 			<groupId>org.apache.oltu.oauth2</groupId>
 			<artifactId>org.apache.oltu.oauth2.resourceserver</artifactId>
 			<version>${oauth2.version}</version>
+		</dependency>
+		<!-- swagger-springmvc -->
+		<dependency>
+			<groupId>com.mangofactory</groupId>
+			<artifactId>swagger-springmvc</artifactId>
+			<version>${swagger-springmvc.version}</version>
 		</dependency>
 	</dependencies>
 

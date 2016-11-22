@@ -10,6 +10,7 @@ import com.mialab.jiandu.exception.CustomException;
 import com.mialab.jiandu.model.AppVersion;
 import com.mialab.jiandu.model.ResponseData;
 import com.mialab.jiandu.service.AppVersionService;
+import com.wordnik.swagger.annotations.ApiOperation;
 
 @Controller
 @RequestMapping("/appVersion")
@@ -18,6 +19,7 @@ public class AppVersionController {
 	@Autowired
 	private AppVersionService appVersionService;
 
+	@ApiOperation(value = "获取最新版本", httpMethod = "POST")
 	@RequestMapping("/checkUpdate")
 	@ResponseBody
 	public ResponseData checkUpdate(@RequestParam Integer versionCode)
