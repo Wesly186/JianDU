@@ -1,16 +1,8 @@
 package com.mialab.jiandu.mapper;
 
 import com.mialab.jiandu.model.OauthToken;
-import com.mialab.jiandu.model.OauthTokenExample;
-
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
 
 public interface OauthTokenMapper {
-	int countByExample(OauthTokenExample example);
-
-	int deleteByExample(OauthTokenExample example);
 
 	int deleteByPrimaryKey(String phone);
 
@@ -18,15 +10,7 @@ public interface OauthTokenMapper {
 
 	int insertSelective(OauthToken record);
 
-	List<OauthToken> selectByExample(OauthTokenExample example);
-
 	OauthToken selectByPrimaryKey(String phone);
-
-	int updateByExampleSelective(@Param("record") OauthToken record,
-			@Param("example") OauthTokenExample example);
-
-	int updateByExample(@Param("record") OauthToken record,
-			@Param("example") OauthTokenExample example);
 
 	int updateByPrimaryKeySelective(OauthToken record);
 

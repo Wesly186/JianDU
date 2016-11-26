@@ -16,12 +16,10 @@ import com.mialab.jiandu.conf.GlobalConf;
 import com.mialab.jiandu.exception.CustomException;
 import com.mialab.jiandu.mapper.OauthTokenMapper;
 import com.mialab.jiandu.mapper.UserMapper;
-import com.mialab.jiandu.mapper.ValidationCodeCustomMapper;
 import com.mialab.jiandu.mapper.ValidationCodeMapper;
 import com.mialab.jiandu.model.OauthToken;
 import com.mialab.jiandu.model.User;
 import com.mialab.jiandu.model.ValidationCode;
-import com.mialab.jiandu.model.ValidationCodeCustom;
 import com.mialab.jiandu.service.UserService;
 import com.taobao.api.ApiException;
 import com.taobao.api.DefaultTaobaoClient;
@@ -34,8 +32,6 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserMapper userMapper;
 	@Autowired
-	private ValidationCodeCustomMapper validationCodeCustomMapper;
-	@Autowired
 	private ValidationCodeMapper validationCodeMapper;
 	@Autowired
 	private OauthTokenMapper oauthTokenMapper;
@@ -43,7 +39,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void register(User user, String validationCode)
 			throws CustomException, OAuthSystemException {
-		ValidationCodeCustom validationCodeCustom = validationCodeCustomMapper
+		ValidationCode validationCodeCustom = validationCodeMapper
 				.selectValidationCodeByPhone(user.getPhone());
 		// 非法验证码
 		if (validationCodeCustom == null) {
@@ -76,7 +72,7 @@ public class UserServiceImpl implements UserService {
 				throw new CustomException(405, "该手机号已经被注册");
 			}
 		}
-		ValidationCodeCustom checkCode = validationCodeCustomMapper
+		ValidationCode checkCode = validationCodeMapper
 				.selectValidationCodeByPhone(phone);
 		int code = (int) (Math.random() * 9000 + 1000);
 		// 阻止重复频繁发送

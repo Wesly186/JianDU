@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mialab.jiandu.mapper.ArticleMapper">
+	<resultMap id="BaseResultMap" type="com.mialab.jiandu.model.Article">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="brief_intro" property="briefIntro" jdbcType="VARCHAR" />
+		<result column="author" property="author" jdbcType="VARCHAR" />
+		<result column="publish_time" property="publishTime" jdbcType="TIMESTAMP" />
+		<result column="pic_url" property="picUrl" jdbcType="VARCHAR" />
+		<result column="article_url" property="articleUrl" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="ArticleUserMap" type="com.mialab.jiandu.model.ArticleRsp">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="brief_intro" property="briefIntro" jdbcType="VARCHAR" />
+		<result column="author" property="author" jdbcType="VARCHAR" />
+		<result column="publish_time" property="publishTime" jdbcType="TIMESTAMP" />
+		<result column="pic_url" property="picUrl" jdbcType="VARCHAR" />
+		<result column="article_url" property="articleUrl" jdbcType="VARCHAR" />
+		<association property="writer" javaType="com.mialab.jiandu.model.User">
+			<id column="phone" property="phone" jdbcType="CHAR" />
+			<result column="username" property="username" jdbcType="VARCHAR" />
+			<result column="password" property="password" jdbcType="VARCHAR" />
+			<result column="head_pic" property="headPic" jdbcType="VARCHAR" />
+			<result column="blog_address" property="blogAddress" jdbcType="VARCHAR" />
+			<result column="introduction" property="introduction"
+				jdbcType="VARCHAR" />
+			<result column="sex" property="sex" jdbcType="VARCHAR" />
+			<result column="job" property="job" jdbcType="VARCHAR" />
+			<result column="register_time" property="registerTime"
+				jdbcType="TIMESTAMP" />
+		</association>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, title, brief_intro, author, publish_time, pic_url,
+		article_url
+	</sql>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from article
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectArticleUserByTime" resultMap="ArticleUserMap"
+		parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		,
+		user.*
+		from article, user
+		where user.phone=article.author
+		order by
+		publish_time desc
+		<if test="limit!=null">
+			limit #{limit}
+		</if>
+		<if test="offset != null">
+			offset #{offset}
+		</if>
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		article
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<insert id="insert" parameterType="com.mialab.jiandu.model.Article">
+		insert into article (id,
+		title, brief_intro,
+		author, publish_time, pic_url,
+		article_url)
+		values
+		(#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR},
+		#{briefIntro,jdbcType=VARCHAR},
+		#{author,jdbcType=VARCHAR},
+		#{publishTime,jdbcType=TIMESTAMP}, #{picUrl,jdbcType=VARCHAR},
+		#{articleUrl,jdbcType=VARCHAR})
+	</insert>
+
+	<insert id="insertSelective" parameterType="com.mialab.jiandu.model.Article">
+		insert into article
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="title != null">
+				title,
+			</if>
+			<if test="briefIntro != null">
+				brief_intro,
+			</if>
+			<if test="author != null">
+				author,
+			</if>
+			<if test="publishTime != null">
+				publish_time,
+			</if>
+			<if test="picUrl != null">
+				pic_url,
+			</if>
+			<if test="articleUrl != null">
+				article_url,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="title != null">
+				#{title,jdbcType=VARCHAR},
+			</if>
+			<if test="briefIntro != null">
+				#{briefIntro,jdbcType=VARCHAR},
+			</if>
+			<if test="author != null">
+				#{author,jdbcType=VARCHAR},
+			</if>
+			<if test="publishTime != null">
+				#{publishTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="picUrl != null">
+				#{picUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="articleUrl != null">
+				#{articleUrl,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.mialab.jiandu.model.Article">
+		update article
+		<set>
+			<if test="title != null">
+				title = #{title,jdbcType=VARCHAR},
+			</if>
+			<if test="briefIntro != null">
+				brief_intro = #{briefIntro,jdbcType=VARCHAR},
+			</if>
+			<if test="author != null">
+				author = #{author,jdbcType=VARCHAR},
+			</if>
+			<if test="publishTime != null">
+				publish_time = #{publishTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="picUrl != null">
+				pic_url = #{picUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="articleUrl != null">
+				article_url = #{articleUrl,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<update id="updateByPrimaryKey" parameterType="com.mialab.jiandu.model.Article">
+		update article
+		set
+		title = #{title,jdbcType=VARCHAR},
+		brief_intro =
+		#{briefIntro,jdbcType=VARCHAR},
+		author = #{author,jdbcType=VARCHAR},
+		publish_time = #{publishTime,jdbcType=TIMESTAMP},
+		pic_url =
+		#{picUrl,jdbcType=VARCHAR},
+		article_url =
+		#{articleUrl,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+</mapper>
