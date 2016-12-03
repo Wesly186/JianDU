@@ -12,4 +12,7 @@ public interface UserService {
 
 	User updateProfile(String accessToken, MultipartFile headPic, User user)
 			throws Exception;
+
+	void updatePassword(String phone, String oldPassword, String newPassword)
+			throws Exception;
 }

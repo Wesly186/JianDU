@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mialab.jiandu.mapper.ArticleCommentMapper">
+
+	<resultMap id="BaseResultMap" type="com.mialab.jiandu.model.ArticleComment">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="article_id" property="articleId" jdbcType="INTEGER" />
+		<result column="publish_time" property="publishTime" jdbcType="TIMESTAMP" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="ArticleCommentRsp" type="com.mialab.jiandu.model.ArticleCommentRsp">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="article_id" property="articleId" jdbcType="INTEGER" />
+		<result column="publish_time" property="publishTime" jdbcType="TIMESTAMP" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<association property="user" javaType="com.mialab.jiandu.model.User">
+			<id column="phone" property="phone" jdbcType="CHAR" />
+			<result column="username" property="username" jdbcType="VARCHAR" />
+			<result column="password" property="password" jdbcType="VARCHAR" />
+			<result column="head_pic" property="headPic" jdbcType="VARCHAR" />
+			<result column="blog_address" property="blogAddress" jdbcType="VARCHAR" />
+			<result column="introduction" property="introduction"
+				jdbcType="VARCHAR" />
+			<result column="sex" property="sex" jdbcType="VARCHAR" />
+			<result column="job" property="job" jdbcType="VARCHAR" />
+			<result column="register_time" property="registerTime"
+				jdbcType="TIMESTAMP" />
+		</association>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, phone, article_id, publish_time, comment
+	</sql>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from article_comment
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectArticleCommentRsp" resultMap="ArticleCommentRsp"
+		parameterType="java.lang.Integer">
+		SELECT
+		article_comment.*,
+		user .*
+		FROM
+		article_comment,
+		user
+		WHERE
+		article_id = #{articleId}
+		AND user .phone = article_comment.phone
+		order by
+		article_comment.publish_time desc
+		<if test="limit!=null">
+			limit #{limit}
+		</if>
+		<if test="offset != null">
+			offset #{offset}
+		</if>
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		article_comment
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<insert id="insert" parameterType="com.mialab.jiandu.model.ArticleComment">
+		insert into article_comment
+		(id, phone, article_id,
+		publish_time, comment)
+		values
+		(#{id,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR},
+		#{articleId,jdbcType=INTEGER},
+		#{publishTime,jdbcType=TIMESTAMP},
+		#{comment,jdbcType=VARCHAR})
+	</insert>
+
+	<insert id="insertSelective" parameterType="com.mialab.jiandu.model.ArticleComment">
+		insert into article_comment
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="phone != null">
+				phone,
+			</if>
+			<if test="articleId != null">
+				article_id,
+			</if>
+			<if test="publishTime != null">
+				publish_time,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="phone != null">
+				#{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="articleId != null">
+				#{articleId,jdbcType=INTEGER},
+			</if>
+			<if test="publishTime != null">
+				#{publishTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.mialab.jiandu.model.ArticleComment">
+		update article_comment
+		<set>
+			<if test="phone != null">
+				phone = #{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="articleId != null">
+				article_id = #{articleId,jdbcType=INTEGER},
+			</if>
+			<if test="publishTime != null">
+				publish_time = #{publishTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<update id="updateByPrimaryKey" parameterType="com.mialab.jiandu.model.ArticleComment">
+		update
+		article_comment
+		set phone = #{phone,jdbcType=VARCHAR},
+		article_id =
+		#{articleId,jdbcType=INTEGER},
+		publish_time =
+		#{publishTime,jdbcType=TIMESTAMP},
+		comment =
+		#{comment,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

@@ -21,4 +21,10 @@ public interface ArticleMapper {
     int updateByPrimaryKey(Article record);
     
     List<ArticleRsp> selectArticleUserByTime(Map<String, Object> queryMap);
+
+	List<ArticleRsp> selectArticleSynthetically(Map<String, Object> queryMap);
+
+	List<ArticleRsp> selectArticleWeekHot(Map<String, Object> queryMap);
+
+	List<ArticleRsp> getArticleCollection(Map<String, Object> queryMap);
 }

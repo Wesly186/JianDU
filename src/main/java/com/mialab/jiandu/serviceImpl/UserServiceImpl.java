@@ -122,7 +122,9 @@ public class UserServiceImpl implements UserService {
 					+ pictureFile_name.substring(pictureFile_name
 							.lastIndexOf("."));
 			// 上传图片
-			File uploadPic = new File("D:/Temp/headPic/" + newFileName);
+			File uploadPic = new File(
+					"/usr/tomcat/apache-tomcat-8.0.39/webapps/pic/"
+							+ newFileName);
 			if (!uploadPic.exists()) {
 				uploadPic.mkdirs();
 			}
@@ -140,5 +142,21 @@ public class UserServiceImpl implements UserService {
 		user = userMapper.selectByPrimaryKey(user.getPhone());
 
 		return user;
+	}
+
+	@Override
+	public void updatePassword(String phone, String oldPassword,
+			String newPassword) throws Exception {
+		User user = userMapper.selectByPrimaryKey(phone);
+		// 密码加密
+		MD5Generator generator = new MD5Generator();
+		String generatePassword = generator.generateValue(oldPassword);
+		if (!user.getPassword().equals(generatePassword)) {
+			throw new CustomException(412, "旧密码不正确！");
+		} else {
+			String newPass = generator.generateValue(newPassword);
+			user.setPassword(newPass);
+			userMapper.updateByPrimaryKeySelective(user);
+		}
 	}
 }

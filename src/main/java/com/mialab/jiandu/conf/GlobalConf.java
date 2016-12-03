@@ -11,6 +11,6 @@ public class GlobalConf {
 	public static final String BUSINESS_REGISTER = "register";
 	public static final String BUSINESS_RETRIEVE_PASSWORD = "retrievePassword";
 
-	public static final int PAGE_SIZE = 15;
+	public static final int PAGE_SIZE = 12;
 
 }

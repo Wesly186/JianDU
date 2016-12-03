@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mialab.jiandu.mapper.ArticleReviewMapper">
+	<resultMap id="BaseResultMap" type="com.mialab.jiandu.model.ArticleReview">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_phone" property="userPhone" jdbcType="VARCHAR" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="brief_intro" property="briefIntro" jdbcType="VARCHAR" />
+		<result column="pic_url" property="picUrl" jdbcType="VARCHAR" />
+		<result column="article_url" property="articleUrl" jdbcType="VARCHAR" />
+		<result column="state" property="state" jdbcType="BIT" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, user_phone, title, brief_intro, pic_url, article_url,
+		state
+	</sql>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from article_review
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		article_review
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<insert id="insert" parameterType="com.mialab.jiandu.model.ArticleReview">
+		insert into article_review
+		(id, user_phone, title,
+		brief_intro, pic_url, article_url,
+		state)
+		values
+		(#{id,jdbcType=INTEGER}, #{userPhone,jdbcType=VARCHAR},
+		#{title,jdbcType=VARCHAR},
+		#{briefIntro,jdbcType=VARCHAR},
+		#{picUrl,jdbcType=VARCHAR}, #{articleUrl,jdbcType=VARCHAR},
+		#{state,jdbcType=BIT})
+	</insert>
+
+	<insert id="insertSelective" parameterType="com.mialab.jiandu.model.ArticleReview">
+		insert into article_review
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="userPhone != null">
+				user_phone,
+			</if>
+			<if test="title != null">
+				title,
+			</if>
+			<if test="briefIntro != null">
+				brief_intro,
+			</if>
+			<if test="picUrl != null">
+				pic_url,
+			</if>
+			<if test="articleUrl != null">
+				article_url,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="userPhone != null">
+				#{userPhone,jdbcType=VARCHAR},
+			</if>
+			<if test="title != null">
+				#{title,jdbcType=VARCHAR},
+			</if>
+			<if test="briefIntro != null">
+				#{briefIntro,jdbcType=VARCHAR},
+			</if>
+			<if test="picUrl != null">
+				#{picUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="articleUrl != null">
+				#{articleUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=BIT},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.mialab.jiandu.model.ArticleReview">
+		update article_review
+		<set>
+			<if test="userPhone != null">
+				user_phone = #{userPhone,jdbcType=VARCHAR},
+			</if>
+			<if test="title != null">
+				title = #{title,jdbcType=VARCHAR},
+			</if>
+			<if test="briefIntro != null">
+				brief_intro = #{briefIntro,jdbcType=VARCHAR},
+			</if>
+			<if test="picUrl != null">
+				pic_url = #{picUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="articleUrl != null">
+				article_url = #{articleUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				state = #{state,jdbcType=BIT},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<update id="updateByPrimaryKey" parameterType="com.mialab.jiandu.model.ArticleReview">
+		update
+		article_review
+		set user_phone = #{userPhone,jdbcType=VARCHAR},
+		title =
+		#{title,jdbcType=VARCHAR},
+		brief_intro =
+		#{briefIntro,jdbcType=VARCHAR},
+		pic_url = #{picUrl,jdbcType=VARCHAR},
+		article_url = #{articleUrl,jdbcType=VARCHAR},
+		state =
+		#{state,jdbcType=BIT}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

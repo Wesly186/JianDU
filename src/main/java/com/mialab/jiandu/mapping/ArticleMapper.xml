@@ -19,6 +19,11 @@
 		<result column="publish_time" property="publishTime" jdbcType="TIMESTAMP" />
 		<result column="pic_url" property="picUrl" jdbcType="VARCHAR" />
 		<result column="article_url" property="articleUrl" jdbcType="VARCHAR" />
+		<result column="collection_num" property="collectionNum"
+			jdbcType="INTEGER" />
+		<result column="comment_num" property="commentNum" jdbcType="INTEGER" />
+		<result column="has_collected" property="hasCollected"
+			jdbcType="BOOLEAN" />
 		<association property="writer" javaType="com.mialab.jiandu.model.User">
 			<id column="phone" property="phone" jdbcType="CHAR" />
 			<result column="username" property="username" jdbcType="VARCHAR" />
@@ -50,13 +55,172 @@
 	<select id="selectArticleUserByTime" resultMap="ArticleUserMap"
 		parameterType="java.util.Map">
 		select
-		<include refid="Base_Column_List" />
-		,
-		user.*
+		article.*, user.*, (
+		SELECT
+		count(*)
+		FROM
+		article_collection
+		WHERE
+		article_id = article.id
+		) collection_num,
+		(
+		SELECT
+		count(*)
+		FROM
+		article_comment
+		WHERE
+		article_id = article.id
+		) comment_num,
+		EXISTS (
+		SELECT
+		phone
+		FROM
+		article_collection
+		WHERE
+		phone = #{phone}
+		AND article_id =
+		article.id
+		) has_collected
 		from article, user
-		where user.phone=article.author
+		where
+		user.phone=article.author
 		order by
 		publish_time desc
+		<if test="limit!=null">
+			limit #{limit}
+		</if>
+		<if test="offset != null">
+			offset #{offset}
+		</if>
+	</select>
+
+	<select id="selectArticleSynthetically" resultMap="ArticleUserMap"
+		parameterType="java.util.Map">
+		select
+		article.*, user.*, (
+		SELECT
+		count(*)
+		FROM
+		article_collection
+		WHERE
+		article_id = article.id
+		) collection_num,
+		(
+		SELECT
+		count(*)
+		FROM
+		article_comment
+		WHERE
+		article_id = article.id
+		) comment_num,
+		EXISTS (
+		SELECT
+		phone
+		FROM
+		article_collection
+		WHERE
+		phone = #{phone}
+		AND article_id =
+		article.id
+		) has_collected
+		from article, user
+		where
+		user.phone=article.author
+		order by
+		(
+		1 / (
+		DATEDIFF(
+		CURDATE(),
+		article.publish_time
+		) + 1
+		)
+		) * 10 + comment_num + collection_num DESC
+		<if test="limit!=null">
+			limit #{limit}
+		</if>
+		<if test="offset != null">
+			offset #{offset}
+		</if>
+	</select>
+
+	<select id="selectArticleWeekHot" resultMap="ArticleUserMap"
+		parameterType="java.util.Map">
+		select
+		article.*, user.*, (
+		SELECT
+		count(*)
+		FROM
+		article_collection
+		WHERE
+		article_id = article.id
+		) collection_num,
+		(
+		SELECT
+		count(*)
+		FROM
+		article_comment
+		WHERE
+		article_id = article.id
+		) comment_num,
+		EXISTS (
+		SELECT
+		phone
+		FROM
+		article_collection
+		WHERE
+		phone = #{phone}
+		AND article_id =
+		article.id
+		) has_collected
+		from article, user
+		where
+		user.phone=article.author
+		order by (comment_num + collection_num*2)
+		DESC
+		<if test="limit!=null">
+			limit #{limit}
+		</if>
+		<if test="offset != null">
+			offset #{offset}
+		</if>
+	</select>
+
+	<select id="getArticleCollection" resultMap="ArticleUserMap"
+		parameterType="java.util.Map">
+		select
+		article.*, user.*, (
+		SELECT
+		count(*)
+		FROM
+		article_collection
+		WHERE
+		article_id = article.id
+		) collection_num,
+		(
+		SELECT
+		count(*)
+		FROM
+		article_comment
+		WHERE
+		article_id = article.id
+		) comment_num,
+		EXISTS (
+		SELECT
+		phone
+		FROM
+		article_collection
+		WHERE
+		phone = #{phone}
+		AND article_id =
+		article.id
+		) has_collected
+		from article, user
+		where
+		user.phone=article.author and
+		article.id in(select article_id from
+		article_collection where phone=#{phone})
+		order by article.publish_time
+		DESC
 		<if test="limit!=null">
 			limit #{limit}
 		</if>

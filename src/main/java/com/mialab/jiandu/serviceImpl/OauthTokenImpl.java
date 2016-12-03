@@ -68,7 +68,7 @@ public class OauthTokenImpl implements OauthTokenService {
 		}
 		// 查询User信息，生成响应
 		LoginRsp loginRsp = new LoginRsp();
-		loginRsp.setUser(userMapper.selectByPrimaryKey(phone));
+		loginRsp.setUserRsp(userMapper.selectLoginInfoByPrimaryKey(phone));
 		loginRsp.setOauthToken(oauthTokenNew);
 
 		return loginRsp;

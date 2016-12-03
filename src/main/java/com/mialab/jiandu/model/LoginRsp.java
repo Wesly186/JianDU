@@ -2,15 +2,15 @@ package com.mialab.jiandu.model;
 
 public class LoginRsp {
 
-	private User user;
+	private UserRsp userRsp;
 	private OauthToken oauthToken;
 
-	public User getUser() {
-		return user;
+	public UserRsp getUserRsp() {
+		return userRsp;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserRsp(UserRsp userRsp) {
+		this.userRsp = userRsp;
 	}
 
 	public OauthToken getOauthToken() {
@@ -20,5 +20,4 @@ public class LoginRsp {
 	public void setOauthToken(OauthToken oauthToken) {
 		this.oauthToken = oauthToken;
 	}
-
 }

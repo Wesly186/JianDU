@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.mialab.jiandu.mapper.UserMapper">
+
 	<resultMap id="BaseResultMap" type="com.mialab.jiandu.model.User">
 		<id column="phone" property="phone" jdbcType="CHAR" />
 		<result column="username" property="username" jdbcType="VARCHAR" />
@@ -12,6 +13,22 @@
 		<result column="job" property="job" jdbcType="VARCHAR" />
 		<result column="register_time" property="registerTime"
 			jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<resultMap id="UserRspMap" type="com.mialab.jiandu.model.UserRsp">
+		<id column="phone" property="phone" jdbcType="CHAR" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="head_pic" property="headPic" jdbcType="VARCHAR" />
+		<result column="blog_address" property="blogAddress" jdbcType="VARCHAR" />
+		<result column="introduction" property="introduction" jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="VARCHAR" />
+		<result column="job" property="job" jdbcType="VARCHAR" />
+		<result column="register_time" property="registerTime"
+			jdbcType="TIMESTAMP" />
+		<result column="collection_num" property="collectionNum"
+			jdbcType="INTEGER" />
+		<result column="read_num" property="readNum" jdbcType="INTEGER" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -26,6 +43,19 @@
 		from user
 		where phone = #{phone,jdbcType=CHAR}
 	</select>
+
+	<select id="selectLoginInfoByPrimaryKey" resultMap="UserRspMap"
+		parameterType="java.lang.String">
+		select user.*,
+		(select count(*) from article_collection
+		where phone=#{phone}) collectionNum,
+		(select count(*) from article_read
+		where phone=#{phone}) readNum
+		from user
+		where phone =
+		#{phone,jdbcType=CHAR}
+	</select>
+
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from user
 		where phone = #{phone,jdbcType=CHAR}

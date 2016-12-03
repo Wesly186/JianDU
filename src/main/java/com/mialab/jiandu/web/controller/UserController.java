@@ -68,4 +68,14 @@ public class UserController {
 
 		return responseData;
 	}
+
+	@ApiOperation(value = "更新密码", httpMethod = "POST")
+	@RequestMapping("/updatePassword")
+	@ResponseBody
+	public ResponseData updatePassword(String phone, String oldPassword,
+			String newPassword) throws Exception {
+		userService.updatePassword(phone, oldPassword, newPassword);
+		ResponseData responseData = new ResponseData(200, "修改成功", null);
+		return responseData;
+	}
 }
