@@ -96,4 +96,35 @@ public class ArticleServiceImpl implements ArticleService {
 		return articleMapper.getArticleCollection(queryMap);
 	}
 
+	@Override
+	public List<ArticleRsp> getArticleReads(String accessToken,
+			Integer currentPage) {
+		OauthToken oauthToken = oauthTokenMapper
+				.getOauthTokenByAccessToken(accessToken);
+
+		Map<String, Object> queryMap = new HashMap<String, Object>();
+
+		queryMap.put("phone", oauthToken.getPhone());
+		queryMap.put("limit", GlobalConf.PAGE_SIZE);
+		queryMap.put("offset", currentPage * GlobalConf.PAGE_SIZE);
+		return articleMapper.getArticleReads(queryMap);
+	}
+
+	@Override
+	public List<ArticleRsp> getBanners(String accessToken) {
+		OauthToken oauthToken = null;
+		if (accessToken != null) {
+			oauthToken = oauthTokenMapper
+					.getOauthTokenByAccessToken(accessToken);
+		}
+
+		String phone = null;
+		if (oauthToken != null) {
+			phone = oauthToken.getPhone();
+		} else {
+			phone = "88888888";
+		}
+
+		return articleMapper.selectBanners(phone);
+	}
 }

@@ -19,6 +19,8 @@ public class Article {
 
 	private String articleUrl;
 
+	private Boolean isBanner;
+
 	public Integer getId() {
 		return id;
 	}
@@ -73,5 +75,13 @@ public class Article {
 
 	public void setArticleUrl(String articleUrl) {
 		this.articleUrl = articleUrl == null ? null : articleUrl.trim();
+	}
+
+	public Boolean getIsBanner() {
+		return isBanner;
+	}
+
+	public void setIsBanner(Boolean isBanner) {
+		this.isBanner = isBanner;
 	}
 }

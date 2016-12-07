@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mialab.jiandu.mapper.ArticleReadMapper">
+	<resultMap id="BaseResultMap" type="com.mialab.jiandu.model.ArticleRead">
+		<id column="phone" property="phone" jdbcType="VARCHAR" />
+		<id column="article_id" property="articleId" jdbcType="INTEGER" />
+		<result column="read_time" property="readTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		phone, article_id, read_time
+	</sql>
+
+	<insert id="insert" parameterType="com.mialab.jiandu.model.ArticleRead">
+		insert into article_read
+		(phone, article_id, read_time
+		)
+		values (#{phone,jdbcType=VARCHAR},
+		#{articleId,jdbcType=INTEGER},
+		#{readTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	
+	<insert id="insertSelective" parameterType="com.mialab.jiandu.model.ArticleRead">
+		insert into article_read
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="phone != null">
+				phone,
+			</if>
+			<if test="articleId != null">
+				article_id,
+			</if>
+			<if test="readTime != null">
+				read_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="phone != null">
+				#{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="articleId != null">
+				#{articleId,jdbcType=INTEGER},
+			</if>
+			<if test="readTime != null">
+				#{readTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.mialab.jiandu.model.ArticleRead">
+		update article_read
+		<set>
+			<if test="readTime != null">
+				read_time = #{readTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where phone = #{phone,jdbcType=VARCHAR}
+		and article_id =
+		#{articleId,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateByPrimaryKey" parameterType="com.mialab.jiandu.model.ArticleRead">
+		update
+		article_read
+		set read_time = #{readTime,jdbcType=TIMESTAMP}
+		where phone
+		= #{phone,jdbcType=VARCHAR}
+		and article_id =
+		#{articleId,jdbcType=INTEGER}
+	</update>
+</mapper>

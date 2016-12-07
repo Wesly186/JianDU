@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.mialab.jiandu.exception.CustomException;
+import com.mialab.jiandu.model.OauthToken;
 import com.mialab.jiandu.model.ResponseData;
 import com.mialab.jiandu.model.User;
+import com.mialab.jiandu.model.UserRsp;
+import com.mialab.jiandu.service.OauthTokenService;
 import com.mialab.jiandu.service.UserService;
 import com.wordnik.swagger.annotations.ApiOperation;
 
@@ -21,6 +24,8 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private OauthTokenService oauthTokenService;
 
 	@ApiOperation(value = "注册", httpMethod = "POST")
 	@RequestMapping("/register")
@@ -77,5 +82,17 @@ public class UserController {
 		userService.updatePassword(phone, oldPassword, newPassword);
 		ResponseData responseData = new ResponseData(200, "修改成功", null);
 		return responseData;
+	}
+
+	@ApiOperation(value = "根据accessToken获取用户信息", httpMethod = "POST")
+	@RequestMapping("/getUserInfoByToken")
+	@ResponseBody
+	public ResponseData getUserInfoByToken(String accessToken) throws Exception {
+
+		OauthToken oauthToken = oauthTokenService
+				.getOauthTokenByAccessToken(accessToken);
+
+		UserRsp userRsp = userService.getUserInfoByPhone(oauthToken.getPhone());
+		return new ResponseData(200, null, userRsp);
 	}
 }

@@ -16,4 +16,8 @@ public interface ArticleService {
 
 	List<ArticleRsp> getArticleCollection(String accessToken,
 			Integer currentPage);
+
+	List<ArticleRsp> getArticleReads(String accessToken, Integer currentPage);
+
+	List<ArticleRsp> getBanners(String accessToken);
 }

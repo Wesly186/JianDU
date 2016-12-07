@@ -31,10 +31,64 @@
 		<result column="read_num" property="readNum" jdbcType="INTEGER" />
 	</resultMap>
 
+	<resultMap id="RankMap" type="com.mialab.jiandu.model.Rank"
+		extends="UserRspMap">
+		<result column="publish_num" property="publishNum" jdbcType="INTEGER" />
+	</resultMap>
+
 	<sql id="Base_Column_List">
 		phone, username, password, head_pic, blog_address,
 		introduction, sex, job, register_time
 	</sql>
+
+	<select id="selectByReads" resultMap="RankMap">
+		select user.*,
+		(select
+		count(*) from article_collection
+		where phone=user.phone and article_id
+		in(select id from article))
+		collectionNum,
+		(select count(*) from
+		article_read
+		where phone=user.phone
+		and article_id in(select id from
+		article))
+		readNum,
+		(select count(*) from
+		article
+		where
+		article.author=user.phone)
+		publish_num
+		from user
+		order by readNum desc
+		limit 50
+	</select>
+
+	<select id="selectByContributions" resultMap="RankMap">
+		select user.*,
+		(select
+		count(*) from article_collection
+		where phone=user.phone and
+		article_id
+		in(select id from article))
+		collectionNum,
+		(select count(*)
+		from
+		article_read
+		where phone=user.phone
+		and article_id in(select id from
+		article))
+		readNum,
+		(select count(*) from
+		article
+		where
+		article.author=user.phone)
+		publish_num
+		from user
+		order by publish_num
+		desc
+		limit 50
+	</select>
 
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
 		parameterType="java.lang.String">
@@ -48,11 +102,15 @@
 		parameterType="java.lang.String">
 		select user.*,
 		(select count(*) from article_collection
-		where phone=#{phone}) collectionNum,
+		where phone=#{phone} and article_id in(select id from article))
+		collectionNum,
 		(select count(*) from article_read
-		where phone=#{phone}) readNum
+		where phone=#{phone}
+		and article_id in(select id from article))
+		readNum
 		from user
-		where phone =
+		where phone
+		=
 		#{phone,jdbcType=CHAR}
 	</select>
 

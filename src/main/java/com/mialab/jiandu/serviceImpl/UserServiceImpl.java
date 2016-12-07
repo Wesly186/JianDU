@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import org.apache.oltu.oauth2.as.issuer.MD5Generator;
@@ -18,7 +19,9 @@ import com.mialab.jiandu.mapper.OauthTokenMapper;
 import com.mialab.jiandu.mapper.UserMapper;
 import com.mialab.jiandu.mapper.ValidationCodeMapper;
 import com.mialab.jiandu.model.OauthToken;
+import com.mialab.jiandu.model.Rank;
 import com.mialab.jiandu.model.User;
+import com.mialab.jiandu.model.UserRsp;
 import com.mialab.jiandu.model.ValidationCode;
 import com.mialab.jiandu.service.UserService;
 import com.taobao.api.ApiException;
@@ -158,5 +161,28 @@ public class UserServiceImpl implements UserService {
 			user.setPassword(newPass);
 			userMapper.updateByPrimaryKeySelective(user);
 		}
+	}
+
+	@Override
+	public UserRsp getUserInfoByPhone(String phone) throws Exception {
+		return userMapper.selectLoginInfoByPrimaryKey(phone);
+	}
+
+	@Override
+	public List<Rank> getRankByReads() {
+		List<Rank> ranks = userMapper.selectByReads();
+		for (int i = 0; i < ranks.size(); i++) {
+			ranks.get(i).setRankNum(i + 1);
+		}
+		return ranks;
+	}
+
+	@Override
+	public List<Rank> getRankByContributions() {
+		List<Rank> ranks = userMapper.selectByContributions();
+		for (int i = 0; i < ranks.size(); i++) {
+			ranks.get(i).setRankNum(i + 1);
+		}
+		return ranks;
 	}
 }

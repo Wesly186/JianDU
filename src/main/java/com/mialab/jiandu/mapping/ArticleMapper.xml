@@ -9,6 +9,7 @@
 		<result column="publish_time" property="publishTime" jdbcType="TIMESTAMP" />
 		<result column="pic_url" property="picUrl" jdbcType="VARCHAR" />
 		<result column="article_url" property="articleUrl" jdbcType="VARCHAR" />
+		<result column="is_banner" property="isBanner" jdbcType="BOOLEAN" />
 	</resultMap>
 
 	<resultMap id="ArticleUserMap" type="com.mialab.jiandu.model.ArticleRsp">
@@ -19,6 +20,7 @@
 		<result column="publish_time" property="publishTime" jdbcType="TIMESTAMP" />
 		<result column="pic_url" property="picUrl" jdbcType="VARCHAR" />
 		<result column="article_url" property="articleUrl" jdbcType="VARCHAR" />
+		<result column="is_banner" property="isBanner" jdbcType="BOOLEAN" />
 		<result column="collection_num" property="collectionNum"
 			jdbcType="INTEGER" />
 		<result column="comment_num" property="commentNum" jdbcType="INTEGER" />
@@ -41,7 +43,7 @@
 
 	<sql id="Base_Column_List">
 		id, title, brief_intro, author, publish_time, pic_url,
-		article_url
+		article_url,is_banner
 	</sql>
 
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
@@ -50,6 +52,46 @@
 		<include refid="Base_Column_List" />
 		from article
 		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectBanners" resultMap="ArticleUserMap"
+		parameterType="string">
+		select
+		article.*, user.*, (
+		SELECT
+		count(*)
+		FROM
+		article_collection
+		WHERE
+		article_id = article.id
+		) collection_num,
+		(
+		SELECT
+		count(*)
+		FROM
+		article_comment
+		WHERE
+		article_id = article.id
+		)
+		comment_num,
+		EXISTS (
+		SELECT
+		phone
+		FROM
+		article_collection
+		WHERE
+		phone =
+		#{phone}
+		AND article_id =
+		article.id
+		) has_collected
+		from article, user
+		where
+		user.phone=article.author and article.is_banner=true
+		order by
+		publish_time desc
+		limit 4
+		offset 0
 	</select>
 
 	<select id="selectArticleUserByTime" resultMap="ArticleUserMap"
@@ -83,7 +125,7 @@
 		) has_collected
 		from article, user
 		where
-		user.phone=article.author
+		user.phone=article.author and article.is_banner=false
 		order by
 		publish_time desc
 		<if test="limit!=null">
@@ -125,7 +167,7 @@
 		) has_collected
 		from article, user
 		where
-		user.phone=article.author
+		user.phone=article.author and article.is_banner=false
 		order by
 		(
 		1 / (
@@ -134,7 +176,8 @@
 		article.publish_time
 		) + 1
 		)
-		) * 10 + comment_num + collection_num DESC
+		) * 10 + comment_num +
+		collection_num DESC
 		<if test="limit!=null">
 			limit #{limit}
 		</if>
@@ -174,8 +217,9 @@
 		) has_collected
 		from article, user
 		where
-		user.phone=article.author
-		order by (comment_num + collection_num*2)
+		user.phone=article.author and article.is_banner=false
+		order by
+		(comment_num + collection_num*2)
 		DESC
 		<if test="limit!=null">
 			limit #{limit}
@@ -214,12 +258,59 @@
 		AND article_id =
 		article.id
 		) has_collected
-		from article, user
+		from article, user, article_collection
 		where
-		user.phone=article.author and
+		user.phone=article.author and article.id=article_collection.article_id
+		and article.id in(select article_id from
+		article_collection where
+		phone=#{phone})
+		order by
+		article_collection.collect_time
+		DESC
+		<if test="limit!=null">
+			limit #{limit}
+		</if>
+		<if test="offset != null">
+			offset #{offset}
+		</if>
+	</select>
+
+	<select id="getArticleReads" resultMap="ArticleUserMap"
+		parameterType="java.util.Map">
+		select
+		article.*, user.*, (
+		SELECT
+		count(*)
+		FROM
+		article_collection
+		WHERE
+		article_id = article.id
+		) collection_num,
+		(
+		SELECT
+		count(*)
+		FROM
+		article_comment
+		WHERE
+		article_id = article.id
+		) comment_num,
+		EXISTS (
+		SELECT
+		phone
+		FROM
+		article_collection
+		WHERE
+		phone = #{phone}
+		AND article_id =
+		article.id
+		) has_collected
+		from article, user, article_read
+		where
+		user.phone=article.author and article.id=article_read.article_id
+		and
 		article.id in(select article_id from
-		article_collection where phone=#{phone})
-		order by article.publish_time
+		article_read where phone=#{phone})
+		order by article_read.read_time
 		DESC
 		<if test="limit!=null">
 			limit #{limit}
@@ -239,13 +330,15 @@
 		insert into article (id,
 		title, brief_intro,
 		author, publish_time, pic_url,
-		article_url)
+		article_url,is_banner)
 		values
-		(#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR},
+		(#{id,jdbcType=INTEGER},
+		#{title,jdbcType=VARCHAR},
 		#{briefIntro,jdbcType=VARCHAR},
 		#{author,jdbcType=VARCHAR},
-		#{publishTime,jdbcType=TIMESTAMP}, #{picUrl,jdbcType=VARCHAR},
-		#{articleUrl,jdbcType=VARCHAR})
+		#{publishTime,jdbcType=TIMESTAMP},
+		#{picUrl,jdbcType=VARCHAR},
+		#{articleUrl,jdbcType=VARCHAR},#{isBanner,jdbcType=BOOLEAN})
 	</insert>
 
 	<insert id="insertSelective" parameterType="com.mialab.jiandu.model.Article">
@@ -272,6 +365,9 @@
 			<if test="articleUrl != null">
 				article_url,
 			</if>
+			<if test="isBanner != null">
+				is_banner,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -294,6 +390,9 @@
 			</if>
 			<if test="articleUrl != null">
 				#{articleUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="isBanner != null">
+				#{isBanner,jdbcType=BOOLEAN},
 			</if>
 		</trim>
 	</insert>
@@ -319,6 +418,9 @@
 			<if test="articleUrl != null">
 				article_url = #{articleUrl,jdbcType=VARCHAR},
 			</if>
+			<if test="isBanner != null">
+				is_banner = #{isBanner,jdbcType=BOOLEAN},
+			</if>
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>
@@ -334,7 +436,9 @@
 		pic_url =
 		#{picUrl,jdbcType=VARCHAR},
 		article_url =
-		#{articleUrl,jdbcType=VARCHAR}
+		#{articleUrl,jdbcType=VARCHAR},
+		is_banner =
+		#{isBanner,jdbcType=BOOLEAN},
 		where id = #{id,jdbcType=INTEGER}
 	</update>
 

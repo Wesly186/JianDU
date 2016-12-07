@@ -1,8 +1,12 @@
 package com.mialab.jiandu.service;
 
+import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
 
+import com.mialab.jiandu.model.Rank;
 import com.mialab.jiandu.model.User;
+import com.mialab.jiandu.model.UserRsp;
 
 public interface UserService {
 
@@ -15,4 +19,10 @@ public interface UserService {
 
 	void updatePassword(String phone, String oldPassword, String newPassword)
 			throws Exception;
+
+	UserRsp getUserInfoByPhone(String phone) throws Exception;
+
+	List<Rank> getRankByReads();
+	
+	List<Rank> getRankByContributions();
 }

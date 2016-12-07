@@ -8,23 +8,27 @@ import com.mialab.jiandu.model.ArticleRsp;
 
 public interface ArticleMapper {
 
-    int deleteByPrimaryKey(Integer id);
+	int deleteByPrimaryKey(Integer id);
 
-    int insert(Article record);
+	int insert(Article record);
 
-    int insertSelective(Article record);
+	int insertSelective(Article record);
 
-    Article selectByPrimaryKey(Integer id);
+	Article selectByPrimaryKey(Integer id);
 
-    int updateByPrimaryKeySelective(Article record);
+	int updateByPrimaryKeySelective(Article record);
 
-    int updateByPrimaryKey(Article record);
-    
-    List<ArticleRsp> selectArticleUserByTime(Map<String, Object> queryMap);
+	int updateByPrimaryKey(Article record);
+
+	List<ArticleRsp> selectBanners(String phone);
+
+	List<ArticleRsp> selectArticleUserByTime(Map<String, Object> queryMap);
 
 	List<ArticleRsp> selectArticleSynthetically(Map<String, Object> queryMap);
 
 	List<ArticleRsp> selectArticleWeekHot(Map<String, Object> queryMap);
 
 	List<ArticleRsp> getArticleCollection(Map<String, Object> queryMap);
+
+	List<ArticleRsp> getArticleReads(Map<String, Object> queryMap);
 }
