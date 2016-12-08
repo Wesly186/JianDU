@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mialab.jiandu.mapper.NotifyMapper">
+	<resultMap id="MessageResultMap" type="com.mialab.jiandu.model.Message">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="brief_intro" property="briefIntro" jdbcType="VARCHAR" />
+		<result column="author" property="author" jdbcType="VARCHAR" />
+		<result column="publish_time" property="publishTime" jdbcType="TIMESTAMP" />
+		<result column="pic_url" property="picUrl" jdbcType="VARCHAR" />
+		<result column="article_url" property="articleUrl" jdbcType="VARCHAR" />
+		<result column="is_banner" property="isBanner" jdbcType="BOOLEAN" />
+		<result column="collection_num" property="collectionNum"
+			jdbcType="INTEGER" />
+		<result column="comment_num" property="commentNum" jdbcType="INTEGER" />
+		<result column="has_collected" property="hasCollected"
+			jdbcType="BOOLEAN" />
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="time" property="time" jdbcType="TIMESTAMP" />
+		<association property="user" javaType="com.mialab.jiandu.model.User">
+			<id column="phone" property="phone" jdbcType="CHAR" />
+			<result column="username" property="username" jdbcType="VARCHAR" />
+			<result column="password" property="password" jdbcType="VARCHAR" />
+			<result column="head_pic" property="headPic" jdbcType="VARCHAR" />
+			<result column="blog_address" property="blogAddress" jdbcType="VARCHAR" />
+			<result column="introduction" property="introduction"
+				jdbcType="VARCHAR" />
+			<result column="sex" property="sex" jdbcType="VARCHAR" />
+			<result column="job" property="job" jdbcType="VARCHAR" />
+			<result column="register_time" property="registerTime"
+				jdbcType="TIMESTAMP" />
+		</association>
+	</resultMap>
+
+	<!-- <resultMap id="ActivityResultMap" type="com.mialab.jiandu.model.Activity"> 
+		<id column="id" property="id" jdbcType="INTEGER" /> <result column="title" 
+		property="title" jdbcType="VARCHAR" /> <result column="brief_intro" property="briefIntro" 
+		jdbcType="VARCHAR" /> <result column="author" property="author" jdbcType="VARCHAR" 
+		/> <result column="publish_time" property="publishTime" jdbcType="TIMESTAMP" 
+		/> <result column="pic_url" property="picUrl" jdbcType="VARCHAR" /> <result 
+		column="article_url" property="articleUrl" jdbcType="VARCHAR" /> <result 
+		column="is_banner" property="isBanner" jdbcType="BOOLEAN" /> <result column="collection_num" 
+		property="collectionNum" jdbcType="INTEGER" /> <result column="comment_num" 
+		property="commentNum" jdbcType="INTEGER" /> <result column="has_collected" 
+		property="hasCollected" jdbcType="BOOLEAN" /> <association property="writer" 
+		javaType="com.mialab.jiandu.model.User"> <id column="phone" property="phone" 
+		jdbcType="CHAR" /> <result column="username" property="username" jdbcType="VARCHAR" 
+		/> <result column="password" property="password" jdbcType="VARCHAR" /> <result 
+		column="head_pic" property="headPic" jdbcType="VARCHAR" /> <result column="blog_address" 
+		property="blogAddress" jdbcType="VARCHAR" /> <result column="introduction" 
+		property="introduction" jdbcType="VARCHAR" /> <result column="sex" property="sex" 
+		jdbcType="VARCHAR" /> <result column="job" property="job" jdbcType="VARCHAR" 
+		/> <result column="register_time" property="registerTime" jdbcType="TIMESTAMP" 
+		/> </association> </resultMap> -->
+
+	<select id="getMessages" resultMap="MessageResultMap"
+		parameterType="java.util.Map">
+		(select
+		article.*, user.*, (
+		SELECT
+		count(*)
+		FROM
+		article_collection
+		WHERE
+		article_id = article.id
+		) collection_num,
+		(
+		SELECT
+		count(*)
+		FROM
+		article_comment
+		WHERE
+		article_id = article.id
+		) comment_num,
+		EXISTS (
+		SELECT
+		phone
+		FROM
+		article_collection
+		WHERE
+		phone = #{phone}
+		AND
+		article_id =
+		article.id
+		) has_collected, 0
+		type,article_comment.publish_time time
+		from article, user
+		,article_comment
+		where
+		user.phone=article_comment.phone and
+		article.author=#{phone} and
+		article_comment.article_id=article.id)
+		UNION
+		(select
+		article.*, user.*, (
+		SELECT
+		count(*)
+		FROM
+		article_collection
+		WHERE
+		article_id = article.id
+		)
+		collection_num,
+		(
+		SELECT
+		count(*)
+		FROM
+		article_comment
+		WHERE
+		article_id =
+		article.id
+		) comment_num,
+		EXISTS (
+		SELECT
+		phone
+		FROM
+		article_collection
+		WHERE
+		phone = #{phone}
+		AND
+		article_id =
+		article.id
+		) has_collected, 1 type
+		,article_collection.collect_time time
+		from article, user
+		,article_collection
+		where
+		user.phone=article_collection.phone and
+		article.author=#{phone} and
+		article_collection.article_id=article.id
+		)
+		order by
+		time desc
+		<if test="limit!=null">
+			limit #{limit}
+		</if>
+		<if test="offset != null">
+			offset #{offset}
+		</if>
+	</select>
+
+	<!-- <select id="getActivities" resultMap="ActivityResultMap" parameterType="java.util.Map"> 
+		select article.*, user.*, ( SELECT count(*) FROM article_collection WHERE 
+		article_id = article.id ) collection_num, ( SELECT count(*) FROM article_comment 
+		WHERE article_id = article.id ) comment_num, EXISTS ( SELECT phone FROM article_collection 
+		WHERE phone = #{phone} AND article_id = article.id ) has_collected from article, 
+		user where user.phone=article.author and article.is_banner=false order by 
+		publish_time desc <if test="limit!=null"> limit #{limit} </if> <if test="offset 
+		!= null"> offset #{offset} </if> </select> -->
+</mapper>

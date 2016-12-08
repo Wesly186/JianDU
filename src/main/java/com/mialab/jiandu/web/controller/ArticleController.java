@@ -205,4 +205,18 @@ public class ArticleController {
 		articleReadService.insert(articleRead);
 		return new ResponseData(200, null, null);
 	}
+
+	@ApiOperation(value = "根据时间顺序后的article列表", httpMethod = "GET")
+	@RequestMapping("/searchArticle")
+	@ResponseBody
+	public ResponseData searchArticle(String accessToken,
+			@RequestParam String keyword, @RequestParam Integer currentPage)
+			throws Exception {
+
+		List<ArticleRsp> articleUserByTime = articleService
+				.selectArticleBykeyword(accessToken, keyword, currentPage);
+		ResponseData responseData = new ResponseData(200, "获取article成功",
+				articleUserByTime);
+		return responseData;
+	}
 }

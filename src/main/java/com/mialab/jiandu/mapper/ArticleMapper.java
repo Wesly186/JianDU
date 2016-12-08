@@ -31,4 +31,6 @@ public interface ArticleMapper {
 	List<ArticleRsp> getArticleCollection(Map<String, Object> queryMap);
 
 	List<ArticleRsp> getArticleReads(Map<String, Object> queryMap);
+
+	List<ArticleRsp> selectArticleByKeyword(Map<String, Object> queryMap);
 }

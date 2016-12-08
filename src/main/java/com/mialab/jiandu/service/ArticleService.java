@@ -20,4 +20,6 @@ public interface ArticleService {
 	List<ArticleRsp> getArticleReads(String accessToken, Integer currentPage);
 
 	List<ArticleRsp> getBanners(String accessToken);
+
+	List<ArticleRsp> selectArticleBykeyword(String accessToken, String keyword, Integer currentPage);
 }

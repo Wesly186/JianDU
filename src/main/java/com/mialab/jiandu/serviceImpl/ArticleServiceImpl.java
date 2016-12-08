@@ -127,4 +127,29 @@ public class ArticleServiceImpl implements ArticleService {
 
 		return articleMapper.selectBanners(phone);
 	}
+
+	@Override
+	public List<ArticleRsp> selectArticleBykeyword(String accessToken,
+			String keyword, Integer currentPage) {
+		OauthToken oauthToken = null;
+		if (accessToken != null) {
+			oauthToken = oauthTokenMapper
+					.getOauthTokenByAccessToken(accessToken);
+		}
+
+		String phone = null;
+		if (oauthToken != null) {
+			phone = oauthToken.getPhone();
+		} else {
+			phone = "88888888";
+		}
+		
+		Map<String, Object> queryMap = new HashMap<String, Object>();
+		
+		queryMap.put("phone", phone);
+		queryMap.put("keyword", keyword);
+		queryMap.put("limit", GlobalConf.PAGE_SIZE);
+		queryMap.put("offset", currentPage * GlobalConf.PAGE_SIZE);
+		return articleMapper.selectArticleByKeyword(queryMap);
+	}
 }

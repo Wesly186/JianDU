@@ -229,6 +229,51 @@
 		</if>
 	</select>
 
+	<select id="selectArticleByKeyword" resultMap="ArticleUserMap"
+		parameterType="java.util.Map">
+		select
+		article.*, user.*, (
+		SELECT
+		count(*)
+		FROM
+		article_collection
+		WHERE
+		article_id = article.id
+		) collection_num,
+		(
+		SELECT
+		count(*)
+		FROM
+		article_comment
+		WHERE
+		article_id = article.id
+		) comment_num,
+		EXISTS (
+		SELECT
+		phone
+		FROM
+		article_collection
+		WHERE
+		phone = #{phone}
+		AND article_id =
+		article.id
+		) has_collected
+		from article, user
+		where
+		user.phone=article.author and (article.title like '%${keyword}%' or
+		user.username like '%${keyword}%')
+		order by
+		(comment_num +
+		collection_num*2)
+		DESC
+		<if test="limit!=null">
+			limit #{limit}
+		</if>
+		<if test="offset != null">
+			offset #{offset}
+		</if>
+	</select>
+
 	<select id="getArticleCollection" resultMap="ArticleUserMap"
 		parameterType="java.util.Map">
 		select
@@ -260,12 +305,11 @@
 		) has_collected
 		from article, user, article_collection
 		where
-		user.phone=article.author and article.id=article_collection.article_id
-		and article.id in(select article_id from
-		article_collection where
-		phone=#{phone})
-		order by
-		article_collection.collect_time
+		user.phone=article.author and article.id=article_collection.article_id and article_collection.phone=#{phone}
+		and
+		article.id in(select article_id from
+		article_collection where phone=#{phone})
+		order by article_collection.collect_time
 		DESC
 		<if test="limit!=null">
 			limit #{limit}
@@ -306,7 +350,7 @@
 		) has_collected
 		from article, user, article_read
 		where
-		user.phone=article.author and article.id=article_read.article_id
+		user.phone=article.author and article.id=article_read.article_id and article_read.phone=#{phone}
 		and
 		article.id in(select article_id from
 		article_read where phone=#{phone})
